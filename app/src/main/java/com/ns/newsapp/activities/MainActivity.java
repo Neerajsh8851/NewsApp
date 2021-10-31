@@ -1,6 +1,7 @@
 package com.ns.newsapp.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -18,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     TabLayout mTabs;
     ViewPager2 mViewPager;
     FragmentAdapter mFragAdapt;
+    Toolbar mToolbar;
 
     public static final String[] TABS = new String[] {
             "Home", "CAT1"
@@ -31,6 +33,9 @@ public class MainActivity extends AppCompatActivity {
 
         mTabs = findViewById(R.id.tabs);
         mViewPager = findViewById(R.id.view_pager);
+        mToolbar = findViewById(R.id.toolbar);
+
+        setSupportActionBar(mToolbar);
 
         FragmentManager fm = getSupportFragmentManager();
         mFragAdapt = new FragmentAdapter(fm, getLifecycle());

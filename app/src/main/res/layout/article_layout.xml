@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="180dp"
+    android:padding="20dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        app:cardCornerRadius="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:textSize="12sp"
+                    android:text="2 hours ago"
+                    android:textColor="#655F5F" />
+
+                <TextView
+                    android:id="@+id/source"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="BBC News"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginBottom="15dp"
+                        android:ellipsize="end"
+                        android:fontFamily="sans-serif-medium"
+                        android:lineSpacingExtra="2dp"
+                        android:maxLines="2"
+                        android:text="Aritcle title hum apke hain kaun movie somvaar ko launch hongi najdiki cinema main"
+                        android:textColor="@color/light_blue"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/description"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/title"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:text="janiye akhir kyu yeh news yah per hain aur kisne isko yah bina matlab ke post kar ke chhod diya hain."
+                        android:textColor="@color/light_blue" />
+
+                </RelativeLayout>
+
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:src="@mipmap/ic_launcher"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+
+    </androidx.cardview.widget.CardView>
+
+</FrameLayout>
