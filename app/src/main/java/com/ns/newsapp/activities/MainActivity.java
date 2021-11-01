@@ -1,29 +1,39 @@
 package com.ns.newsapp.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.FragmentManager;
-import androidx.viewpager2.widget.ViewPager2;
-
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.SearchView;
 
-import com.google.android.material.tabs.TabLayout;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.ns.newsapp.ApiUtility;
+import com.ns.newsapp.OnArticleClickListener;
 import com.ns.newsapp.R;
-import com.ns.newsapp.adapters.FragmentAdapter;
+import com.ns.newsapp.adapters.ArticleAdapter;
+import com.ns.newsapp.data.Article;
+import com.ns.newsapp.data.News;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
     private static final boolean d = true;
-    private static final String TAG = "dMainAc";
+    private static final String TAG = "MainAc";
 
-    TabLayout mTabs;
-    ViewPager2 mViewPager;
-    FragmentAdapter mFragAdapt;
-    Toolbar mToolbar;
+    private final String mApiKey = "407d8cb4960a4ec582bd0ee52735e787";
+    private ArticleAdapter mAdapter;
+    private RecyclerView mRecView;
+    private SearchView mSearch;
 
-    public static final String[] TABS = new String[] {
-            "Home", "CAT1"
-    };
 
 
     @Override
@@ -31,46 +41,82 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mTabs = findViewById(R.id.tabs);
-        mViewPager = findViewById(R.id.view_pager);
-        mToolbar = findViewById(R.id.toolbar);
+        mSearch = findViewById(R.id.search_bar);
+        mRecView = findViewById(R.id.recycler_view);
 
-        setSupportActionBar(mToolbar);
-
-        FragmentManager fm = getSupportFragmentManager();
-        mFragAdapt = new FragmentAdapter(fm, getLifecycle());
-
-        mViewPager.setAdapter(mFragAdapt);
-
-        for (String tab : TABS)
-            mTabs.addTab(mTabs.newTab().setText(tab));
-
-        mTabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        OnArticleClickListener listener = new OnArticleClickListener() {
             @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                mViewPager.setCurrentItem(tab.getPosition());
-                if (d) Log.d(TAG, "onTabSelected()");
+            public void onArticleClick(View v, String url) {
+                Intent intent = new Intent(MainActivity.this, WebActivity.class);
+                intent.putExtra("url", url);
+                startActivity(intent);
+            }
+        };
+
+        mAdapter = new ArticleAdapter(new ArrayList<>(), listener);
+
+        mRecView.setLayoutManager(new LinearLayoutManager(this));
+        mRecView.setAdapter(mAdapter);
+
+        fetchNews();
+        mSearch.setOnQueryTextListener(this);
+    }
+
+
+    /**
+     * Fetch News Articles form newsApi.org
+     */
+    private void fetchNews() {
+        ApiUtility.getApiInterface().getNews("in", 100, mApiKey).enqueue(new Callback<News>() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onResponse(@NonNull Call<News> call, @NonNull Response<News> response) {
+                if (response.isSuccessful()) {
+                    assert response.body() != null;
+                    mAdapter.getLocalDataSet().addAll(response.body().getArticles());
+                    mAdapter.notifyDataSetChanged();
+                }
             }
 
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-                if (d) Log.d(TAG, "onTabUnelected()");
-            }
+            public void onFailure(@NonNull Call<News> call, @NonNull Throwable t) {
 
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-                if (d) Log.d(TAG, "onTabReselected()");
             }
         });
+    }
 
 
-        mViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+    private void searchNews(final String q) {
+        ApiUtility.getApiInterface().search(q,"in",100, mApiKey).enqueue(new Callback<News>() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
-            public void onPageSelected(int position) {
-                super.onPageSelected(position);
-                mTabs.selectTab(mTabs.getTabAt(position));
+            public void onResponse(@NonNull Call<News> call, @NonNull Response<News> response) {
+                if (!response.isSuccessful()) return;
+                ArrayList<Article> data = mAdapter.getLocalDataSet();
+                data.clear();
+
+                assert response.body() != null;
+                data.addAll(response.body().getArticles());
+                mAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<News> call, @NonNull Throwable t) {
+
             }
         });
+    }
 
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        if (d) Log.d(TAG, "onQueryTextSubmit: query = " + query);
+        searchNews(query);
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        if (d) Log.d(TAG, "onQueryTextSubmit: query = " + newText);
+        return false;
     }
 }

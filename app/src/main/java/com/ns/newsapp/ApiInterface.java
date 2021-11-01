@@ -19,9 +19,9 @@ public interface ApiInterface {
     );
 
 
-    @GET("everything")
+    @GET("top-headlines")
     Call<News> search(
-            @Query("q") String keyword,
+            @Query("q") String keywords,
             @Query("country") String country,
             @Query("pageSize") int pageSize,
             @Query("ApiKey") String ApiKey

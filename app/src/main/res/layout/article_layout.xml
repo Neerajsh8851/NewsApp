@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="180dp"
-    android:padding="20dp"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.cardview.widget.CardView
-        app:cardCornerRadius="10dp"
+        android:id="@+id/card_view"
+        app:cardCornerRadius="5dp"
+        app:cardElevation="2dp"
+        app:cardBackgroundColor="@color/white"
+        app:cardMaxElevation="8dp"
+        app:cardPreventCornerOverlap="true"
+        app:cardUseCompatPadding="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -17,6 +22,7 @@
 
             <LinearLayout
                 android:orientation="horizontal"
+                android:paddingStart="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -48,6 +54,7 @@
                 <RelativeLayout
                     android:layout_weight="1"
                     android:layout_width="0dp"
+                    android:padding="5dp"
                     android:layout_height="wrap_content">
 
                     <TextView
@@ -60,7 +67,7 @@
                         android:fontFamily="sans-serif-medium"
                         android:lineSpacingExtra="2dp"
                         android:maxLines="2"
-                        android:text="Aritcle title hum apke hain kaun movie somvaar ko launch hongi najdiki cinema main"
+                        android:text="lorem sorem lipsum dipsum kisum"
                         android:textColor="@color/light_blue"
                         android:textSize="14sp"
                         android:textStyle="bold" />
@@ -72,24 +79,25 @@
                         android:layout_below="@id/title"
                         android:ellipsize="end"
                         android:maxLines="2"
-                        android:text="janiye akhir kyu yeh news yah per hain aur kisne isko yah bina matlab ke post kar ke chhod diya hain."
+                        android:text="lorem chorem lipsum dummy text korium moruim"
                         android:textColor="@color/light_blue" />
 
                 </RelativeLayout>
 
                 <ImageView
+                    android:id="@+id/image"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
+                    android:scaleType="centerCrop"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
                     android:src="@mipmap/ic_launcher"
                     />
 
             </LinearLayout>
 
         </LinearLayout>
-
-
 
     </androidx.cardview.widget.CardView>
 
