@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
 
     /**
-     * Fetch News Articles form newsApi.org
+     * Fetch News Articles from newsApi.org
      */
     private void fetchNews() {
         ApiUtility.getApiInterface().getNews("in", 100, mApiKey).enqueue(new Callback<News>() {

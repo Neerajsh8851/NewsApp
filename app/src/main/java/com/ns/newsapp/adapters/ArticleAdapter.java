@@ -20,6 +20,7 @@ import com.ns.newsapp.data.Article;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Objects;
 
 
@@ -52,18 +53,6 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
             mImage = view.findViewById(R.id.image);
             cardView = view.findViewById(R.id.card_view);
         }
-
-        public void setTitle(final String text) {
-            mTitle.setText(text);
-        }
-
-        public void setDescription(final String text) {
-            mDescription.setText(text);
-        }
-
-        public void setSource(final String text) {
-            mSource.setText(text);
-        }
     }
 
     /**
@@ -77,7 +66,6 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         this.onArticleClick = onArticleClick;
     }
 
-    // Create new views (invoked by the layout manager)
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
@@ -94,24 +82,27 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         // bind the model to the view
         Article article = localDataSet.get(position);
 
-        // time ago
-        @SuppressLint("SimpleDateFormat")
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-        CharSequence ago = "";
+        // fill data to the card view
+        viewHolder.mTitle.setText(article.title);
+        viewHolder.mTime.setText(convertToTimeAgo(article.publishedAt));
+        viewHolder.mSource.setText(article.source.name);
+        viewHolder.mDescription.setText(article.description);
+        Glide.with(viewHolder.mImage.getContext()).load(article.urlToImage).into(viewHolder.mImage);
 
+        viewHolder.cardView.setOnClickListener(v -> onArticleClick.onArticleClick(v, article.url));
+    }
+
+    private CharSequence convertToTimeAgo(String publishedAt) {
+        final String pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern, new Locale("EN", "INDIA"));
+        CharSequence ago = "";
         try {
-            long time = Objects.requireNonNull(sdf.parse(article.publishedAt)).getTime();
+            long time = Objects.requireNonNull(sdf.parse(publishedAt)).getTime();
             long now = System.currentTimeMillis();
             ago = DateUtils.getRelativeTimeSpanString(time, now, DateUtils.MINUTE_IN_MILLIS);
         }catch (Exception ignored) { }
 
-        viewHolder.setTitle(article.title);
-        viewHolder.mTime.setText(ago);
-        viewHolder.setSource(article.source.name);
-        viewHolder.setDescription(article.description);
-        Glide.with(viewHolder.mImage.getContext()).load(article.urlToImage).into(viewHolder.mImage);
-
-        viewHolder.cardView.setOnClickListener(v -> onArticleClick.onArticleClick(v, article.url));
+        return ago;
     }
 
     // Return the size of your dataset (invoked by the layout manager)
