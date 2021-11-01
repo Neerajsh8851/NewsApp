@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
@@ -31,9 +30,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     private final String mApiKey = "407d8cb4960a4ec582bd0ee52735e787";
     private ArticleAdapter mAdapter;
-    private RecyclerView mRecView;
-    private SearchView mSearch;
-
 
 
     @Override
@@ -41,16 +37,13 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mSearch = findViewById(R.id.search_bar);
-        mRecView = findViewById(R.id.recycler_view);
+        SearchView mSearch = findViewById(R.id.search_bar);
+        RecyclerView mRecView = findViewById(R.id.recycler_view);
 
-        OnArticleClickListener listener = new OnArticleClickListener() {
-            @Override
-            public void onArticleClick(View v, String url) {
-                Intent intent = new Intent(MainActivity.this, WebActivity.class);
-                intent.putExtra("url", url);
-                startActivity(intent);
-            }
+        OnArticleClickListener listener = (v, url) -> {
+            Intent intent = new Intent(MainActivity.this, WebActivity.class);
+            intent.putExtra("url", url);
+            startActivity(intent);
         };
 
         mAdapter = new ArticleAdapter(new ArrayList<>(), listener);

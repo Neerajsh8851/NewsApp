@@ -1,6 +1,5 @@
 package com.ns.newsapp;
 
-import com.ns.newsapp.data.Article;
 import com.ns.newsapp.data.News;
 
 import retrofit2.Call;
@@ -11,7 +10,7 @@ public interface ApiInterface {
 
     String baseUrl = "https://newsapi.org/v2/";
 
-    @GET("top-headlines")
+    @GET("top-headlines")   // relative url
     Call<News> getNews(
       @Query("country") String country,
       @Query("pageSize") int pageSize,

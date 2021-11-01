@@ -15,14 +15,6 @@ public class News {
     }
 
 
-    public String getStatus() {
-        return status;
-    }
-
-    public int getTotalResults() {
-        return totalResults;
-    }
-
     public ArrayList<Article> getArticles() {
         return articles;
     }

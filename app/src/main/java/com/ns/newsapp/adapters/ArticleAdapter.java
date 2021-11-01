@@ -1,7 +1,7 @@
 package com.ns.newsapp.adapters;
 
 
-import android.content.Intent;
+import android.annotation.SuppressLint;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.ns.newsapp.OnArticleClickListener;
 import com.ns.newsapp.R;
-import com.ns.newsapp.activities.WebActivity;
 import com.ns.newsapp.data.Article;
 
 import java.text.SimpleDateFormat;
@@ -95,7 +94,8 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         // bind the model to the view
         Article article = localDataSet.get(position);
 
-        // calculate time ago
+        // time ago
+        @SuppressLint("SimpleDateFormat")
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         CharSequence ago = "";
 
@@ -103,10 +103,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
             long time = Objects.requireNonNull(sdf.parse(article.publishedAt)).getTime();
             long now = System.currentTimeMillis();
             ago = DateUtils.getRelativeTimeSpanString(time, now, DateUtils.MINUTE_IN_MILLIS);
-            article.publishedAt = ago.toString();
-        }catch (Exception e) {
-
-        }
+        }catch (Exception ignored) { }
 
         viewHolder.setTitle(article.title);
         viewHolder.mTime.setText(ago);
@@ -114,12 +111,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         viewHolder.setDescription(article.description);
         Glide.with(viewHolder.mImage.getContext()).load(article.urlToImage).into(viewHolder.mImage);
 
-        viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onArticleClick.onArticleClick(v, article.url);
-            }
-        });
+        viewHolder.cardView.setOnClickListener(v -> onArticleClick.onArticleClick(v, article.url));
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -127,7 +119,6 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
     public int getItemCount() {
         return localDataSet.size();
     }
-
 
     public ArrayList<Article> getLocalDataSet() {
         return localDataSet;
